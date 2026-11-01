@@ -42,6 +42,14 @@ st.sidebar.metric(label="Total Resto Ter-review", value=len(st.session_state.rev
 st.sidebar.metric(label="Total Transaksi Sukses", value=len(st.session_state.transaction_history))
 st.sidebar.metric(label="Item di Keranjang", value=sum(item["qty"] for item in st.session_state.cart.values()))
 
+# Identitas Footer di Sidebar
+st.sidebar.markdown("---")
+st.sidebar.info(
+    "**D4 Manajemen Informatika**\n\n"
+    "Universitas Negeri Surabaya (UNESA)\n\n"
+    "*Project Tugas Kelompok 2026*"
+)
+
 # ==========================================
 # 0. MENU: DASHBOARD & STATISTIK
 # ==========================================
@@ -81,14 +89,15 @@ elif menu == "🎲 Gacha Makanan":
     col1, col2 = st.columns([2, 1])
     
     with col1:
-        mood = st.selectbox("Lagi Pengen Sensasi Rasa Apa?", ["Semua Rasa", "Pedas Nampol 🌶️", "Gurih / Asin 🍗", "Manis / Dessert 🍧", "Kuah Segar 🍲"])
+        mood = st.selectbox("Lagi Pengen Sensasi Rasa Apa?", ["Semua Rasa", "Pedas Nampol 🌶️", "Gurih / Asin 🍗", "Manis / Dessert 🍧", "Kuah Segar 🍲", "Minuman Kekinian 🧋"])
         porsi = st.radio("Kategori Porsi:", ["Camilan Ringan", "Makan Siang / Malam Kenyang", "Porsi Rame-rame Kelompok"])
         
         makanan_db = {
             "Pedas Nampol 🌶️": ["Ayam Geprek Sambal Korek Level 5", "Seblak Jeletot Komplit Extra Ceker", "Pentol Gila Pedas Cadas", "Rujak Cingur Sambal Petis Pedas"],
             "Gurih / Asin 🍗": ["Nasi Goreng Mawut Sosis Kebuli", "Tahu Tek Telur Petis khas Surabaya", "Bebek Goreng Madura Bumbu Hitam", "Martabak Telur Daging Sapi Special"],
             "Manis / Dessert 🍧": ["Es Pisang Ijo Karamel Lumer", "Kue Pukis Keeling Lumer Keju", "Terang Bulan Red Velvet Cream Cheese", "Es Cendol Durian Kental"],
-            "Kuah Segar 🍲": ["Soto Ayam Lamongan Koya Melimpah", "Rawon Sapi Daging Empal Bumbu Hitam", "Bakso Malang Komplit Paru Kering", "Mie Kocok Bandung Kuah Kikil"]
+            "Kuah Segar 🍲": ["Soto Ayam Lamongan Koya Melimpah", "Rawon Sapi Daging Empal Bumbu Hitam", "Bakso Malang Komplit Paru Kering", "Mie Kocok Bandung Kuah Kikil"],
+            "Minuman Kekinian 🧋": ["Es Kopi Susu Gula Aren Signature", "Matcha Latte Creamy Cheese Foam", "Jus Mangga Segar Extra Whipped Cream", "Thai Tea Original Bangkok"]
         }
         
         if st.button("🎰 Putar Undian Gacha!"):
@@ -109,7 +118,7 @@ elif menu == "🎲 Gacha Makanan":
         st.info("Fitur ini dirancang menggunakan algoritma acak terstruktur untuk mengatasi keraguan memilih makanan.")
 
 # ==========================================
-# 2. MENU: RADAR KULINER UNIK
+# 2. MENU: RADAR KULINER UNIK (DENGAN FILTER)
 # ==========================================
 elif menu == "🌶️ Radar Kuliner Unik":
     st.header("🌶️ Radar Kuliner Unik & Legendaris Nusantara")
@@ -125,7 +134,8 @@ elif menu == "🌶️ Radar Kuliner Unik":
         {"nama": "🍢 Sate Lalat", "kategori": "Camilan Tradisional", "asal": "Pamekasan, Madura", "desc": "Sate dengan potongan daging kecil menyerupai lalat, disajikan bumbu kacang pekat khas Madura.", "harga": 12000, "unik": "8.5 / 10", "badge": "🔥 Unik & Tradisional"},
         {"nama": "🍲 Rawon Setan", "kategori": "Makanan Berat", "asal": "Surabaya, Jawa Timur", "desc": "Rawon kuah pekat kluwek hitam dengan potongan daging empuk besar dan sambal super pedas.", "harga": 28000, "unik": "9.0 / 10", "badge": "🏆 Legendaris Jatim"},
         {"nama": "🍧 Es Laksamana Mengamuk", "kategori": "Minuman / Dessert", "asal": "Riau", "desc": "Minuman segar berbahan buah kuini/mangga dipadu kuah santan gurih dan gula merah kental.", "harga": 15000, "unik": "9.8 / 10", "badge": "⭐ Paling Segar"},
-        {"nama": "🍛 Nasi Bebek Bumbu Hitam", "kategori": "Makanan Berat", "asal": "Bangkalan, Madura", "desc": "Nasi hangat dengan bebek empuk berlumur bumbu hitam rempah pekat yang gurih menggigit.", "harga": 25000, "unik": "9.2 / 10", "badge": "👑 Juara Favorit"}
+        {"nama": "🍛 Nasi Bebek Bumbu Hitam", "kategori": "Makanan Berat", "asal": "Bangkalan, Madura", "desc": "Nasi hangat dengan bebek empuk berlumur bumbu hitam rempah pekat yang gurih menggigit.", "harga": 25000, "unik": "9.2 / 10", "badge": "👑 Juara Favorit"},
+        {"nama": "🧋 Es Kopi Susu Gula Aren", "kategori": "Minuman / Dessert", "asal": "Surabaya", "desc": "Perpaduan espresso robusta pilihan dengan susu segar dan manisnya gula aren asli.", "harga": 18000, "unik": "9.5 / 10", "badge": "☕ Best Seller"}
     ]
     
     st.markdown("---")
@@ -155,18 +165,21 @@ elif menu == "🌶️ Radar Kuliner Unik":
                         st.toast(f"{item_name} ditambahkan ke sistem POS!", icon="🛒")
 
 # ==========================================
-# 3. MENU: RESEP KREASI UNIK
+# 3. MENU: RESEP KREASI UNIK (DENGAN KALKULATOR)
 # ==========================================
 elif menu == "🍳 Resep Kreasi Unik":
     st.header("🍳 Resep Kreasi Kuliner Kreatif & Praktis")
-    st.markdown("Panduan memasak langkah demi langkah untuk referensi menu kuliner mandiri.")
+    st.markdown("Panduan memasak langkah demi langkah lengkap dengan kalkulator takaran bahan otomatis berdasarkan jumlah porsi.")
     
     resep_pilihan = st.selectbox("Pilih Resep:", [
         "Indomie Carbonara Keju Creamy",
         "Nasi Goreng Kimchi Jawa (Pedas Manis)",
-        "Omelet Mie Geprek Lumer"
+        "Omelet Mie Geprek Lumer",
+        "Es Kopi Susu Gula Aren Signature"
     ])
     
+    porsi = st.number_input("🔢 Masukkan Jumlah Porsi / Gelas:", min_value=1, max_value=100, value=1, step=1)
+    st.info(f"✨ Takaran bahan di bawah ini otomatis disesuaikan untuk **{porsi} Porsi/Gelas**:")
     st.markdown("---")
     
     if resep_pilihan == "Indomie Carbonara Keju Creamy":
@@ -175,11 +188,11 @@ elif menu == "🍳 Resep Kreasi Unik":
             st.subheader("🍝 Indomie Carbonara Keju Creamy")
             st.info("⏱️ Waktu: 10 Menit | Kesulitan: Mudah")
             st.write("**Bahan-bahan:**")
-            st.markdown("""
-            * 1 bungkus Indomie Goreng
-            * 100 ml Susu UHT putih *full cream*
-            * 1 lembar *Cheese slice* (keju melt)
-            * Sosis / bakso secukupnya
+            st.markdown(f"""
+            * Bungkus Indomie Goreng: **{1 * porsi} bungkus**
+            * Susu UHT *full cream*: **{100 * porsi} ml**
+            * Lembar *Cheese slice* (keju melt): **{1 * porsi} lembar**
+            * Sosis / bakso: **{50 * porsi} gram**
             """)
         with col_r2:
             st.subheader("👨‍🍳 Langkah Pembuatan:")
@@ -196,11 +209,11 @@ elif menu == "🍳 Resep Kreasi Unik":
             st.subheader("🍚 Nasi Goreng Kimchi Jawa")
             st.info("⏱️ Waktu: 12 Menit | Kesulitan: Sedang")
             st.write("**Bahan-bahan:**")
-            st.markdown("""
-            * 1 piring Nasi dingin
-            * 3 sdm Kimchi cincang
-            * 1 butir Telur ayam
-            * 2 sdm Kecap manis khas Jawa
+            st.markdown(f"""
+            * Piring Nasi dingin: **{1 * porsi} piring**
+            * Kimchi cincang: **{3 * porsi} sdm**
+            * Telur ayam: **{1 * porsi} butir**
+            * Kecap manis khas Jawa: **{2 * porsi} sdm**
             """)
         with col_r2:
             st.subheader("👨‍🍳 Langkah Pembuatan:")
@@ -217,11 +230,11 @@ elif menu == "🍳 Resep Kreasi Unik":
             st.subheader("🍳 Omelet Mie Geprek Lumer")
             st.info("⏱️ Waktu: 15 Menit | Kesulitan: Mudah")
             st.write("**Bahan-bahan:**")
-            st.markdown("""
-            * 1 bungkus mie instan (rebus matang)
-            * 2 butir Telur ayam
-            * Sambal korek geprek secukupnya
-            * Keju cheddar parut
+            st.markdown(f"""
+            * Bungkus mie instan: **{1 * porsi} bungkus**
+            * Telur ayam: **{2 * porsi} butir**
+            * Sambal korek geprek: **{2 * porsi} sdm**
+            * Keju cheddar parut: **{30 * porsi} gram**
             """)
         with col_r2:
             st.subheader("👨‍🍳 Langkah Pembuatan:")
@@ -231,12 +244,32 @@ elif menu == "🍳 Resep Kreasi Unik":
             3. Oleskan sambal korek dan taburi keju parut di atasnya.
             """)
 
+    elif resep_pilihan == "Es Kopi Susu Gula Aren Signature":
+        col_r1, col_r2 = st.columns([1, 1])
+        with col_r1:
+            st.subheader("🧋 Es Kopi Susu Gula Aren")
+            st.info("⏱️ Waktu: 5 Menit | Kesulitan: Sangat Mudah")
+            st.write("**Bahan-bahan:**")
+            st.markdown(f"""
+            * Shot Espresso / Kopi Bubuk Pekat: **{30 * porsi} ml**
+            * Susu Fresh Milk: **{120 * porsi} ml**
+            * Sirup Gula Aren Asli: **{20 * porsi} ml**
+            * Es Batu Kristal: **{1 * porsi} mangkuk kecil**
+            """)
+        with col_r2:
+            st.subheader("👨‍🍳 Langkah Pembuatan:")
+            st.markdown("""
+            1. Masukkan sirup gula aren dan es batu ke dalam gelas saji.
+            2. Tuangkan susu fresh milk perlahan di atasnya.
+            3. Tambahkan espresso di lapisan paling atas untuk efek estetik. Aduk sebelum diminum!
+            """)
+
 # ==========================================
-# 4. MENU: KASIR & PEMBAYARAN (POS)
+# 4. MENU: KASIR & PEMBAYARAN (POS + PRINT)
 # ==========================================
 elif menu == "💳 Kasir & Pembayaran (POS)":
     st.header("💳 POS (Point of Sales) & Transaksi Kasir")
-    st.markdown("Sistem kasir digital lengkap dengan manajemen keranjang, diskon/total, dan pencetakan struk.")
+    st.markdown("Sistem kasir digital lengkap dengan manajemen keranjang, kalkulasi pembayaran, dan cetak struk langsung.")
     
     daftar_menu = [
         {"item": "Ayam Geprek Sambal Korek Lvl 5", "kategori": "Makanan", "harga": 18000},
@@ -244,15 +277,17 @@ elif menu == "💳 Kasir & Pembayaran (POS)":
         {"item": "Tahu Tek Telur Petis Surabaya", "kategori": "Makanan", "harga": 15000},
         {"item": "Rawon Sapi Daging Empal", "kategori": "Makanan", "harga": 28000},
         {"item": "Seblak Jeletot Komplit", "kategori": "Makanan", "harga": 16000},
+        {"item": "Es Kopi Susu Gula Aren Signature", "kategori": "Minuman", "harga": 18000},
+        {"item": "Matcha Latte Creamy Cheese", "kategori": "Minuman", "harga": 20000},
         {"item": "Es Pisang Ijo Karamel Lumer", "kategori": "Minuman / Dessert", "harga": 12000},
         {"item": "Es Cendol Durian Kental", "kategori": "Minuman / Dessert", "harga": 14000},
-        {"item": "Es Teh Manis Jumbo", "kategori": "Minuman / Dessert", "harga": 5000},
+        {"item": "Es Teh Manis Jumbo", "kategori": "Minuman", "harga": 5000},
     ]
     
     col_menu, col_struk = st.columns([1.4, 1.1])
     
     with col_menu:
-        st.subheader("🛒 Katalog Menu Kasir")
+        st.subheader("🛒 Katalog Menu Kasir & Minuman")
         for index, item in enumerate(daftar_menu):
             c1, c2, c3 = st.columns([2.2, 1.2, 1])
             c1.write(f"**{item['item']}**\n*({item['kategori']})*")
@@ -337,13 +372,46 @@ elif menu == "💳 Kasir & Pembayaran (POS)":
                         "waktu": time.strftime("%Y-%m-%d %H:%M:%S")
                     })
                     
+                    # Tombol Download Struk .TXT
                     st.download_button(
                         label="📄 Download Struk .TXT",
                         data=struk_text,
                         file_name=f"Struk_{nama_pelanggan}.txt",
                         mime="text/plain"
                     )
-            
+                    
+                    # Cetak Struk via Komponen iframe Streamlit (Dijamin Berfungsi)
+                    import streamlit.components.v1 as components
+                    
+                    html_print_code = f"""
+                    <!DOCTYPE html>
+                    <html>
+                    <head>
+                        <script>
+                            function triggerPrint() {{
+                                var myWindow = window.open('', '_blank', 'width=400,height=600');
+                                myWindow.document.write('<html><head><title>Struk Kulineria</title></head><body style="font-family:monospace; padding:20px;">');
+                                myWindow.document.write('<h3><center>KULINERIA ENTERPRISE POS</center></h3>');
+                                myWindow.document.write('<p>Waktu: {time.strftime("%Y-%m-%d %H:%M:%S")}<br>Pelanggan: {nama_pelanggan}<br>Metode: {metode}</p>');
+                                myWindow.document.write('<hr>');
+                                myWindow.document.write('<pre>{struk_text.replace(chr(10), "<br>")}</pre>');
+                                myWindow.document.write('<hr>');
+                                myWindow.document.write('<p align="center">Terima Kasih Telah Berkunjung!<br>D4 Manajemen Informatika UNESA</p>');
+                                myWindow.document.write('</body></html>');
+                                myWindow.document.close();
+                                myWindow.focus();
+                                setTimeout(function(){{myWindow.print();}}, 500);
+                            }}
+                        </script>
+                    </head>
+                    <body style="margin:0; padding:0;">
+                        <button onclick="triggerPrint()" style="width:100%; background-color:#ff4b4b; color:white; padding:12px; border:none; border-radius:6px; font-weight:bold; font-family:sans-serif; cursor:pointer;">
+                            🖨️ Klik Disini Untuk Cetak Struk
+                        </button>
+                    </body>
+                    </html>
+                    """
+                    components.html(html_print_code, height=60)
             with col_reset:
                 if st.button("🗑️ Kosongkan Semua"):
                     st.session_state.cart = {}
