@@ -19,21 +19,51 @@ if "reviews" not in st.session_state:
 if "transaction_history" not in st.session_state:
     st.session_state.transaction_history = []
 
+if "role" not in st.session_state:
+    st.session_state.role = "Pelanggan"
+
+# ==========================================
+# SISTEM LOGIN MULTI-ROLE (KASIR VS PELANGGAN)
+# ==========================================
+st.sidebar.title("🔐 Hak Akses & Login")
+role_choice = st.sidebar.radio("Masuk Sebagai:", ["Pelanggan / User", "Kasir / Admin Resto"])
+
+if role_choice == "Kasir / Admin Resto":
+    password = st.sidebar.text_input("Password Kasir:", type="password")
+    if password == "123":  # Password sederhana untuk demo
+        st.session_state.role = "Kasir"
+        st.sidebar.success("✅ Berhasil Masuk sebagai Kasir!")
+    else:
+        st.session_state.role = "Pelanggan"
+        if password != "":
+            st.sidebar.error("❌ Password Salah!")
+else:
+    st.session_state.role = "Pelanggan"
+
+st.sidebar.markdown("---")
+
 # Judul & Header Profesional
 st.title("🍔 Kulineria: Enterprise Food Finder & POS Suite")
-st.markdown("Platform manajemen kuliner terpadu: Eksplorasi, Resep Kreatif, Sistem Kasir POS Modern, dan Dashboard Analitik.")
+st.markdown("Platform manajemen kuliner terpadu: Eksplorasi, Peta Google Maps, Resep Kreatif, Sistem Kasir POS Modern, dan Dashboard Analitik.")
 st.markdown("---")
 
-# Sidebar Navigasi Menu Profesional
+# Sidebar Navigasi Menu Berdasarkan Role
 st.sidebar.title("🍽️ Navigasi Kulineria")
-menu = st.sidebar.radio("Pilih Menu:", [
-    "📊 Dashboard & Statistik",
-    "🎲 Gacha Makanan",
-    "🌶️ Radar Kuliner Unik",
-    "🍳 Resep Kreasi Unik",
-    "💳 Kasir & Pembayaran (POS)",
-    "⭐ Catat & Review Resto"
-])
+
+if st.session_state.role == "Kasir":
+    menu = st.sidebar.radio("Pilih Menu Kasir:", [
+        "📊 Dashboard & Statistik",
+        "💳 Kasir & Pembayaran (POS)"
+    ])
+    st.sidebar.warning("⚠️ Mode Aktif: **Kasir / Admin**")
+else:
+    menu = st.sidebar.radio("Pilih Menu Pelanggan:", [
+        "🎲 Gacha Makanan",
+        "🌶️ Radar Kuliner & Peta Maps",
+        "🍳 Resep Kreasi Unik",
+        "⭐ Catat & Review Resto"
+    ])
+    st.sidebar.info("ℹ️ Mode Aktif: **Pelanggan**")
 
 # Statistik Live di Sidebar
 st.sidebar.markdown("---")
@@ -51,7 +81,7 @@ st.sidebar.info(
 )
 
 # ==========================================
-# 0. MENU: DASHBOARD & STATISTIK
+# 0. MENU: DASHBOARD & STATISTIK (KASIR ONLY)
 # ==========================================
 if menu == "📊 Dashboard & Statistik":
     st.header("📊 Dashboard Analitik & Ringkasan Performa")
@@ -118,11 +148,11 @@ elif menu == "🎲 Gacha Makanan":
         st.info("Fitur ini dirancang menggunakan algoritma acak terstruktur untuk mengatasi keraguan memilih makanan.")
 
 # ==========================================
-# 2. MENU: RADAR KULINER UNIK (DENGAN FILTER)
+# 2. MENU: RADAR KULINER & PETA GOOGLE MAPS
 # ==========================================
-elif menu == "🌶️ Radar Kuliner Unik":
-    st.header("🌶️ Radar Kuliner Unik & Legendaris Nusantara")
-    st.markdown("Eksplorasi kuliner antimainstream. Kamu bisa langsung menambahkan menu ini ke keranjang POS!")
+elif menu == "🌶️ Radar Kuliner & Peta Maps":
+    st.header("🌶️ Radar Kuliner Unik & Peta Lokasi (Google Maps)")
+    st.markdown("Eksplorasi kuliner antimainstream lengkap dengan tautan navigasi langsung ke **Google Maps**.")
     
     col_f1, col_f2 = st.columns(2)
     with col_f1:
@@ -131,11 +161,11 @@ elif menu == "🌶️ Radar Kuliner Unik":
         filter_harga = st.selectbox("Filter Batas Harga:", ["Semua Harga", "Di bawah Rp 15.000", "Di bawah Rp 30.000"])
     
     data_kuliner = [
-        {"nama": "🍢 Sate Lalat", "kategori": "Camilan Tradisional", "asal": "Pamekasan, Madura", "desc": "Sate dengan potongan daging kecil menyerupai lalat, disajikan bumbu kacang pekat khas Madura.", "harga": 12000, "unik": "8.5 / 10", "badge": "🔥 Unik & Tradisional"},
-        {"nama": "🍲 Rawon Setan", "kategori": "Makanan Berat", "asal": "Surabaya, Jawa Timur", "desc": "Rawon kuah pekat kluwek hitam dengan potongan daging empuk besar dan sambal super pedas.", "harga": 28000, "unik": "9.0 / 10", "badge": "🏆 Legendaris Jatim"},
-        {"nama": "🍧 Es Laksamana Mengamuk", "kategori": "Minuman / Dessert", "asal": "Riau", "desc": "Minuman segar berbahan buah kuini/mangga dipadu kuah santan gurih dan gula merah kental.", "harga": 15000, "unik": "9.8 / 10", "badge": "⭐ Paling Segar"},
-        {"nama": "🍛 Nasi Bebek Bumbu Hitam", "kategori": "Makanan Berat", "asal": "Bangkalan, Madura", "desc": "Nasi hangat dengan bebek empuk berlumur bumbu hitam rempah pekat yang gurih menggigit.", "harga": 25000, "unik": "9.2 / 10", "badge": "👑 Juara Favorit"},
-        {"nama": "🧋 Es Kopi Susu Gula Aren", "kategori": "Minuman / Dessert", "asal": "Surabaya", "desc": "Perpaduan espresso robusta pilihan dengan susu segar dan manisnya gula aren asli.", "harga": 18000, "unik": "9.5 / 10", "badge": "☕ Best Seller"}
+        {"nama": "🍢 Sate Lalat", "kategori": "Camilan Tradisional", "asal": "Pamekasan, Madura", "desc": "Sate dengan potongan daging kecil menyerupai lalat, disajikan bumbu kacang pekat khas Madura.", "harga": 12000, "unik": "8.5 / 10", "badge": "🔥 Unik & Tradisional", "maps_query": "Sate Lalat Pamekasan Madura"},
+        {"nama": "🍲 Rawon Setan", "kategori": "Makanan Berat", "asal": "Surabaya, Jawa Timur", "desc": "Rawon kuah pekat kluwek hitam dengan potongan daging empuk besar dan sambal super pedas.", "harga": 28000, "unik": "9.0 / 10", "badge": "🏆 Legendaris Jatim", "maps_query": "Rawon Setan Surabaya"},
+        {"nama": "🍧 Es Laksamana Mengamuk", "kategori": "Minuman / Dessert", "asal": "Riau", "desc": "Minuman segar berbahan buah kuini/mangga dipadu kuah santan gurih dan gula merah kental.", "harga": 15000, "unik": "9.8 / 10", "badge": "⭐ Paling Segar", "maps_query": "Kuliner khas Riau Pekanbaru"},
+        {"nama": "🍛 Nasi Bebek Bumbu Hitam", "kategori": "Makanan Berat", "asal": "Bangkalan, Madura", "desc": "Nasi hangat dengan bebek empuk berlumur bumbu hitam rempah pekat yang gurih menggigit.", "harga": 25000, "unik": "9.2 / 10", "badge": "👑 Juara Favorit", "maps_query": "Bebek Sinjay Bangkalan Madura"},
+        {"nama": "🧋 Es Kopi Susu Gula Aren", "kategori": "Minuman / Dessert", "asal": "Surabaya", "desc": "Perpaduan espresso robusta pilihan dengan susu segar dan manisnya gula aren asli.", "harga": 18000, "unik": "9.5 / 10", "badge": "☕ Best Seller", "maps_query": "Kopi Susu Kekinian Surabaya"}
     ]
     
     st.markdown("---")
@@ -155,6 +185,11 @@ elif menu == "🌶️ Radar Kuliner Unik":
                     st.write(item["desc"])
                     st.write(f"💰 **Estimasi Harga:** Rp {item['harga']:,}")
                     st.markdown(f"✨ **Skor Keunikan:** `{item['unik']}`")
+                    
+                    # Tombol Tautan Google Maps
+                    maps_url = f"https://www.google.com/maps/search/?api=1&query={item['maps_query'].replace(' ', '+')}"
+                    st.markdown(f"📍 [Buka Lokasi di Google Maps]({maps_url})", unsafe_allow_html=True)
+
                 with col_info2:
                     if st.button("➕ Masukkan POS", key=f"radar_btn_{idx}"):
                         item_name = item['nama']
@@ -165,7 +200,7 @@ elif menu == "🌶️ Radar Kuliner Unik":
                         st.toast(f"{item_name} ditambahkan ke sistem POS!", icon="🛒")
 
 # ==========================================
-# 3. MENU: RESEP KREASI UNIK (DENGAN KALKULATOR)
+# 3. MENU: RESEP KREASI UNIK
 # ==========================================
 elif menu == "🍳 Resep Kreasi Unik":
     st.header("🍳 Resep Kreasi Kuliner Kreatif & Praktis")
@@ -265,157 +300,127 @@ elif menu == "🍳 Resep Kreasi Unik":
             """)
 
 # ==========================================
-# 4. MENU: KASIR & PEMBAYARAN (POS + PRINT)
+# 4. MENU: KASIR & PEMBAYARAN (POS + PRINT) - KASIR ONLY
 # ==========================================
 elif menu == "💳 Kasir & Pembayaran (POS)":
-    st.header("💳 POS (Point of Sales) & Transaksi Kasir")
-    st.markdown("Sistem kasir digital lengkap dengan manajemen keranjang, kalkulasi pembayaran, dan cetak struk langsung.")
-    
-    daftar_menu = [
-        {"item": "Ayam Geprek Sambal Korek Lvl 5", "kategori": "Makanan", "harga": 18000},
-        {"item": "Bebek Goreng Madura Bumbu Hitam", "kategori": "Makanan", "harga": 25000},
-        {"item": "Tahu Tek Telur Petis Surabaya", "kategori": "Makanan", "harga": 15000},
-        {"item": "Rawon Sapi Daging Empal", "kategori": "Makanan", "harga": 28000},
-        {"item": "Seblak Jeletot Komplit", "kategori": "Makanan", "harga": 16000},
-        {"item": "Es Kopi Susu Gula Aren Signature", "kategori": "Minuman", "harga": 18000},
-        {"item": "Matcha Latte Creamy Cheese", "kategori": "Minuman", "harga": 20000},
-        {"item": "Es Pisang Ijo Karamel Lumer", "kategori": "Minuman / Dessert", "harga": 12000},
-        {"item": "Es Cendol Durian Kental", "kategori": "Minuman / Dessert", "harga": 14000},
-        {"item": "Es Teh Manis Jumbo", "kategori": "Minuman", "harga": 5000},
-    ]
-    
-    col_menu, col_struk = st.columns([1.4, 1.1])
-    
-    with col_menu:
-        st.subheader("🛒 Katalog Menu Kasir & Minuman")
-        for index, item in enumerate(daftar_menu):
-            c1, c2, c3 = st.columns([2.2, 1.2, 1])
-            c1.write(f"**{item['item']}**\n*({item['kategori']})*")
-            c2.write(f"Rp {item['harga']:,}")
-            if c3.button("➕ Tambah", key=f"btn_{index}"):
-                item_name = item['item']
-                if item_name in st.session_state.cart:
-                    st.session_state.cart[item_name]["qty"] += 1
-                else:
-                    st.session_state.cart[item_name] = {"harga": item['harga'], "qty": 1, "kategori": item['kategori']}
-                st.toast(f"{item_name} ditambahkan!", icon="🛒")
-
-    with col_struk:
-        st.subheader("📋 Keranjang Belanja & Struk")
+    if st.session_state.role != "Kasir":
+        st.error("⛔ Akses Ditolak! Menu ini khusus untuk **Kasir / Admin Resto**. Silakan login di sidebar.")
+    else:
+        st.header("💳 POS (Point of Sales) & Transaksi Kasir")
+        st.markdown("Sistem kasir digital lengkap dengan manajemen keranjang, kalkulasi pembayaran, dan cetak struk langsung.")
         
-        if not st.session_state.cart:
-            st.info("Keranjang kosong. Silakan pilih menu dari katalog atau menu Radar Kuliner.")
-        else:
-            total_harga = 0
-            struk_text = "======== STRUK KULINERIA POS ========\n"
-            list_item_trx = []
-            
-            for item_name, info in list(st.session_state.cart.items()):
-                subtotal = info["harga"] * info["qty"]
-                total_harga += subtotal
-                
-                c_name, c_qty, c_del = st.columns([1.8, 1.2, 0.8])
-                c_name.write(f"**{item_name}**\nRp {info['harga']:,} x {info['qty']}")
-                
-                if c_qty.button("➖", key=f"sub_{item_name}"):
-                    st.session_state.cart[item_name]["qty"] -= 1
-                    if st.session_state.cart[item_name]["qty"] <= 0:
-                        del st.session_state.cart[item_name]
-                    st.rerun()
-                    
-                if c_del.button("🗑️ Hapus", key=f"del_{item_name}"):
-                    del st.session_state.cart[item_name]
-                    st.rerun()
-                    
-                struk_text += f"{item_name} (x{info['qty']}) : Rp {subtotal:,}\n"
-                list_item_trx.append(f"{item_name} (x{info['qty']}) = Rp {subtotal:,}")
-            
-            st.markdown("---")
-            st.markdown(f"### **Total Tagihan: Rp {total_harga:,}**")
-            struk_text += f"-------------------------------------\nTOTAL: Rp {total_harga:,}\n"
-            
-            metode = st.selectbox("Metode Pembayaran:", [
-                "Tunai (Cash)",
-                "DANA",
-                "ShopeePay",
-                "OVO",
-                "GoPay",
-                "QRIS All Payment"
-            ])
-            
-            nama_pelanggan = st.text_input("Nama Pelanggan:", "Nabil")
-            struk_text += f"Pelanggan: {nama_pelanggan}\nMetode: {metode}\n====================================="
-            
-            if metode == "Tunai (Cash)":
-                nominal_cash = st.number_input("Bayar Tunai (Rp):", min_value=total_harga, value=total_harga, step=5000)
-                kembalian = nominal_cash - total_harga
-                st.write(f"Uang Kembalian: **Rp {kembalian:,}**")
-            elif metode == "QRIS All Payment":
-                st.warning("📱 Silakan scan QRIS di layar terminal kasir.")
-            else:
-                st.text_input(f"No HP / Akun {metode}:", "081234567890")
+        daftar_menu = [
+            {"item": "Ayam Geprek Sambal Korek Lvl 5", "kategori": "Makanan", "harga": 18000},
+            {"item": "Bebek Goreng Madura Bumbu Hitam", "kategori": "Makanan", "harga": 25000},
+            {"item": "Tahu Tek Telur Petis Surabaya", "kategori": "Makanan", "harga": 15000},
+            {"item": "Rawon Sapi Daging Empal", "kategori": "Makanan", "harga": 28000},
+            {"item": "Seblak Jeletot Komplit", "kategori": "Makanan", "harga": 16000},
+            {"item": "Es Kopi Susu Gula Aren Signature", "kategori": "Minuman", "harga": 18000},
+            {"item": "Matcha Latte Creamy Cheese", "kategori": "Minuman", "harga": 20000},
+            {"item": "Es Pisang Ijo Karamel Lumer", "kategori": "Minuman / Dessert", "harga": 12000},
+            {"item": "Es Cendol Durian Kental", "kategori": "Minuman / Dessert", "harga": 14000},
+            {"item": "Es Teh Manis Jumbo", "kategori": "Minuman", "harga": 5000},
+        ]
+        
+        col_menu, col_struk = st.columns([1.4, 1.1])
+        
+        with col_menu:
+            st.subheader("🛒 Katalog Menu Kasir & Minuman")
+            for index, item in enumerate(daftar_menu):
+                c1, c2, c3 = st.columns([2.2, 1.2, 1])
+                c1.write(f"**{item['item']}**\n*({item['kategori']})*")
+                c2.write(f"Rp {item['harga']:,}")
+                if c3.button("➕ Tambah", key=f"btn_{index}"):
+                    item_name = item['item']
+                    if item_name in st.session_state.cart:
+                        st.session_state.cart[item_name]["qty"] += 1
+                    else:
+                        st.session_state.cart[item_name] = {"harga": item['harga'], "qty": 1, "kategori": item['kategori']}
+                    st.toast(f"{item_name} ditambahkan!", icon="🛒")
 
-            col_bayar, col_reset = st.columns(2)
-            with col_bayar:
-                if st.button("✅ Selesaikan & Cetak"):
-                    with st.spinner("Memproses transaksi..."):
-                        time.sleep(1)
-                    st.snow()
-                    st.success("🎉 Transaksi Berhasil Direkam!")
+        with col_struk:
+            st.subheader("📋 Keranjang Belanja & Struk")
+            
+            if not st.session_state.cart:
+                st.info("Keranjang kosong. Silakan pilih menu dari katalog di sebelah kiri.")
+            else:
+                total_harga = 0
+                struk_text = "======== STRUK KULINERIA POS ========\n"
+                list_item_trx = []
+                
+                for item_name, info in list(st.session_state.cart.items()):
+                    subtotal = info["harga"] * info["qty"]
+                    total_harga += subtotal
                     
-                    # Rekam ke Riwayat Transaksi Global
-                    st.session_state.transaction_history.append({
-                        "nama": nama_pelanggan,
-                        "total": total_harga,
-                        "metode": metode,
-                        "items": list_item_trx,
-                        "waktu": time.strftime("%Y-%m-%d %H:%M:%S")
-                    })
+                    c_name, c_qty, c_del = st.columns([1.8, 1.2, 0.8])
+                    c_name.write(f"**{item_name}**\nRp {info['harga']:,} x {info['qty']}")
                     
-                    # Tombol Download Struk .TXT
-                    st.download_button(
-                        label="📄 Download Struk .TXT",
-                        data=struk_text,
-                        file_name=f"Struk_{nama_pelanggan}.txt",
-                        mime="text/plain"
-                    )
-                    
-                    # Cetak Struk via Komponen iframe Streamlit (Dijamin Berfungsi)
-                    import streamlit.components.v1 as components
-                    
-                    html_print_code = f"""
-                    <!DOCTYPE html>
-                    <html>
-                    <head>
-                        <script>
-                            function triggerPrint() {{
-                                var myWindow = window.open('', '_blank', 'width=400,height=600');
-                                myWindow.document.write('<html><head><title>Struk Kulineria</title></head><body style="font-family:monospace; padding:20px;">');
-                                myWindow.document.write('<h3><center>KULINERIA ENTERPRISE POS</center></h3>');
-                                myWindow.document.write('<p>Waktu: {time.strftime("%Y-%m-%d %H:%M:%S")}<br>Pelanggan: {nama_pelanggan}<br>Metode: {metode}</p>');
-                                myWindow.document.write('<hr>');
-                                myWindow.document.write('<pre>{struk_text.replace(chr(10), "<br>")}</pre>');
-                                myWindow.document.write('<hr>');
-                                myWindow.document.write('<p align="center">Terima Kasih Telah Berkunjung!<br>D4 Manajemen Informatika UNESA</p>');
-                                myWindow.document.write('</body></html>');
-                                myWindow.document.close();
-                                myWindow.focus();
-                                setTimeout(function(){{myWindow.print();}}, 500);
-                            }}
-                        </script>
-                    </head>
-                    <body style="margin:0; padding:0;">
-                        <button onclick="triggerPrint()" style="width:100%; background-color:#ff4b4b; color:white; padding:12px; border:none; border-radius:6px; font-weight:bold; font-family:sans-serif; cursor:pointer;">
-                            🖨️ Klik Disini Untuk Cetak Struk
-                        </button>
-                    </body>
-                    </html>
-                    """
-                    components.html(html_print_code, height=60)
-            with col_reset:
-                if st.button("🗑️ Kosongkan Semua"):
-                    st.session_state.cart = {}
-                    st.rerun()
+                    if c_qty.button("➖", key=f"sub_{item_name}"):
+                        st.session_state.cart[item_name]["qty"] -= 1
+                        if st.session_state.cart[item_name]["qty"] <= 0:
+                            del st.session_state.cart[item_name]
+                        st.rerun()
+                        
+                    if c_del.button("🗑️ Hapus", key=f"del_{item_name}"):
+                        del st.session_state.cart[item_name]
+                        st.rerun()
+                        
+                    struk_text += f"{item_name} (x{info['qty']}) : Rp {subtotal:,}\n"
+                    list_item_trx.append(f"{item_name} (x{info['qty']}) = Rp {subtotal:,}")
+                
+                st.markdown("---")
+                st.markdown(f"### **Total Tagihan: Rp {total_harga:,}**")
+                struk_text += f"-------------------------------------\nTOTAL: Rp {total_harga:,}\n"
+                
+                metode = st.selectbox("Metode Pembayaran:", [
+                    "Tunai (Cash)",
+                    "DANA",
+                    "ShopeePay",
+                    "OVO",
+                    "GoPay",
+                    "QRIS All Payment"
+                ])
+                
+                nama_pelanggan = st.text_input("Nama Pelanggan:", "Pelanggan Umum")
+                struk_text += f"Pelanggan: {nama_pelanggan}\nMetode: {metode}\n====================================="
+                
+                if metode == "Tunai (Cash)":
+                    nominal_cash = st.number_input("Bayar Tunai (Rp):", min_value=total_harga, value=total_harga, step=5000)
+                    kembalian = nominal_cash - total_harga
+                    st.write(f"Uang Kembalian: **Rp {kembalian:,}**")
+                elif metode == "QRIS All Payment":
+                    st.warning("📱 Silakan scan QRIS di layar terminal kasir.")
+                else:
+                    st.text_input(f"No HP / Akun {metode}:", "081234567890")
+
+                col_bayar, col_reset = st.columns(2)
+                with col_bayar:
+                    if st.button("✅ Selesaikan & Cetak"):
+                        with st.spinner("Memproses transaksi..."):
+                            time.sleep(1)
+                        st.snow()
+                        st.success("🎉 Transaksi Berhasil Direkam!")
+                        
+                        # Rekam ke Riwayat Transaksi Global
+                        st.session_state.transaction_history.append({
+                            "nama": nama_pelanggan,
+                            "total": total_harga,
+                            "metode": metode,
+                            "items": list_item_trx,
+                            "waktu": time.strftime("%Y-%m-%d %H:%M:%S")
+                        })
+                        
+                        # Tombol Download Struk .TXT
+                        st.download_button(
+                            label="📄 Download Struk .TXT",
+                            data=struk_text,
+                            file_name=f"Struk_{nama_pelanggan}.txt",
+                            mime="text/plain"
+                        )
+                with col_reset:
+                    if st.button("🗑️ Kosongkan Semua"):
+                        st.session_state.cart = {}
+                        st.rerun()
 
 # ==========================================
 # 5. MENU: CATAT & REVIEW RESTO
